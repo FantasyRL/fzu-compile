@@ -8,7 +8,7 @@ make clean
 make 
 cd build || (echo 0 >>"$log_file" && exit 0) # 如果编译失败，直接输出0分并退出
 score=0
-CCHK="java cn.edu.fzu.ccds.compilerprinciples.mandrill.lexer.HandcraftLexer"
+CCHK="java mandrill.HandcraftLexer"
 echo $CCHK
 for filec in $(ls $normaldir/*.mds); do
     full_score=$((full_score+1))

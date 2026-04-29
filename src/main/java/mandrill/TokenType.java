@@ -1,4 +1,4 @@
-package cn.edu.fzu.ccds.compilerprinciples.mandrill.lexer.tokens;
+package mandrill;
 
 public enum TokenType {
     // 关键字

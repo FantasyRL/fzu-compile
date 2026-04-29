@@ -4,3 +4,5 @@ build/
 data.mds
 data.lexerout
 lexerout.diff.txt
+*.log
+.idea/

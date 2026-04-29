@@ -1,4 +1,4 @@
-package cn.edu.fzu.ccds.compilerprinciples.mandrill.lexer.tokens;
+package mandrill;
 
 public class Token {
     public final TokenType type;

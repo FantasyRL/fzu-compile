@@ -26,7 +26,7 @@ update:  $(BUILD_DIR) $(CLASS_FILES)
 .PHONY =  update Main clean
 
 # This is the main executable you want
-TARGET = cn.edu.fzu.ccds.compilerprinciples.mandrill.lexer.HandcraftLexer
+TARGET = mandrill.HandcraftLexer
 
 # Alias for that executable, you can use -> make Main
 # to build it.
