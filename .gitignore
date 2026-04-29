@@ -1,0 +1,6 @@
+.DS_Store
+build/
+*.class
+data.mds
+data.lexerout
+lexerout.diff.txt
