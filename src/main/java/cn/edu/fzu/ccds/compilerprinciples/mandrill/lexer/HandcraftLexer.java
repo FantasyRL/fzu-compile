@@ -1,4 +1,7 @@
-package mandrill;
+package cn.edu.fzu.ccds.compilerprinciples.mandrill.lexer;
+
+import cn.edu.fzu.ccds.compilerprinciples.mandrill.lexer.tokens.Token;
+import cn.edu.fzu.ccds.compilerprinciples.mandrill.lexer.tokens.TokenType;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;

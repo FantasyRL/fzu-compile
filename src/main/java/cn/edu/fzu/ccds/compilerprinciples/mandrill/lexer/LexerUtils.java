@@ -1,4 +1,4 @@
-package mandrill;
+package cn.edu.fzu.ccds.compilerprinciples.mandrill.lexer;
 
 import java.io.IOException;
 
