@@ -1,0 +1,15 @@
+func[] strcpy(src[]) {
+    dst[] = "";
+    i = 0;
+    while (1) {
+        if (src[i] == 0) {
+            break;
+        }
+        dst[i] = src[i];
+        i = i + 1;
+    }
+    dst[i] = 0;
+    return dst;
+}
+
+write = strcpy("Hello World");

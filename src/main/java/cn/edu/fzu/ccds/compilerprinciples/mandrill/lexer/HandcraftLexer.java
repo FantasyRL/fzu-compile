@@ -11,10 +11,9 @@ import java.util.List;
 import java.util.Map;
 
 public class HandcraftLexer {
-    // 关键字表 先按标识符规则读出完整单词，再用这张表判断是否为关键字。
+    // 关键字表：先按标识符规则读出完整单词，再用这张表判断是否为关键字。
     private static final Map<String, TokenType> KEYWORDS = new HashMap<>();
 
-    // init
     static {
         KEYWORDS.put("if", TokenType.IF);
         KEYWORDS.put("else", TokenType.ELSE);
@@ -32,6 +31,7 @@ public class HandcraftLexer {
     }
 
     private final PushbackReader reader;
+
     private final List<Token> tokens = new ArrayList<>();
 
     // 当前扫描位置。column 表示最近一次读入字符所在列；行首读字符前为 0。
@@ -293,8 +293,7 @@ public class HandcraftLexer {
         System.err.printf("Lexer error at Ln %d, Col %d: %s%n", errorLine, errorColumn, message);
         System.exit(1);
     }
-    
-    // 这两个函数不要进行改动
+
     public HandcraftLexer(InputStream is) {
         this.reader = new PushbackReader(new InputStreamReader(is, StandardCharsets.UTF_8));
     }

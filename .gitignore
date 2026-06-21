@@ -4,5 +4,12 @@ build/
 data.mds
 data.lexerout
 lexerout.diff.txt
+parserout.diff.txt
+ans.diff.txt
+*.asm
+*.out
+mandrill.in
+*.tokens
+*.interp
 *.log
 .idea/

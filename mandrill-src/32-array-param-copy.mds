@@ -1,0 +1,14 @@
+func copy(src[], dst[]) {
+    i = 0;
+    while (src[i] != 0) {
+        dst[i] = src[i];
+        i = i + 1;
+    }
+    dst[i] = 0;
+    return 0;
+}
+
+a[] = "Hello World";
+b[] = "";
+ignore = copy(a, b);
+write = b;

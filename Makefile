@@ -1,57 +1,66 @@
-# 变量定义区（Variables）
-# 定义了编译器别名和路径规则，方便后续统一修改，可以在这里添加额外的编译选项或路径。如：javac -cp xxx.jar
-JV = java
+# 变量定义
+ANTLR_JAR = antlr-4.13.2-complete.jar
 JC = javac
-BUILD_DIR = ./build
-SRC_DIR = ./src/main/java
+JV = java
+BUILD_DIR = build
+SRC_DIR = src/main/java
+G4_FILE = Mandrill.g4
+PACKAGE_NAME = cn.edu.fzu.ccds.compilerprinciples.mandrill.antlr
+GENERATED_DIR = $(SRC_DIR)/cn/edu/fzu/ccds/compilerprinciples/mandrill/antlr
+MAIN_CLASS = cn.edu.fzu.ccds.compilerprinciples.mandrill.compiler.CompilerMain
 
-# 在src目录下查找所有的Java源文件，并将它们存储在JAVA_FILES变量中。
-JAVA_FILES := $(shell find $(SRC_DIR) -name "*.java")
-# 路径映射 (patsubst)：告诉 Make 如何在保持包结构（Package Structure）的同时，自动生成目标文件路径。
-CLASS_FILES :=  $(patsubst $(SRC_DIR)/%.java,$(BUILD_DIR)/%.class,$(JAVA_FILES))
+# ANTLR 生成的 Java 文件（显式列出，确保 clean 后仍能被编译）
+ANTLR_GENERATED = \
+	$(GENERATED_DIR)/MandrillLexer.java \
+	$(GENERATED_DIR)/MandrillParser.java \
+	$(GENERATED_DIR)/MandrillBaseListener.java \
+	$(GENERATED_DIR)/MandrillListener.java \
+	$(GENERATED_DIR)/MandrillBaseVisitor.java \
+	$(GENERATED_DIR)/MandrillVisitor.java
 
+# 手写 Java 文件
+HANDWRITTEN_FILES := $(shell find $(SRC_DIR) -name "*.java" ! -path "$(GENERATED_DIR)/*")
 
-# Make the build directory
-DIRS = $(BUILD_DIR)
+# 所有需要编译的 Java 文件
+JAVA_FILES = $(HANDWRITTEN_FILES) $(ANTLR_GENERATED)
 
-# Remove files
-CLEAN = $(SRCS) $(BUILD_DIR)
+# 默认目标
+.PHONY: all clean run
 
-# After the Application is first built, use this
-# to update single files. NOTE: Might not work
-# if multiple files are updated.
-# When A new file class is created, you
-# will have to clean and build the project again
-update:  $(BUILD_DIR) $(CLASS_FILES)
-.PHONY =  update Main clean
+all: $(BUILD_DIR)/.compiled
 
-# This is the main executable you want
-TARGET = cn.edu.fzu.ccds.compilerprinciples.mandrill.lexer.HandcraftLexer
+parser: $(ANTLR_GENERATED)
 
-# Alias for that executable, you can use -> make Main
-# to build it.
-Main: $(TARGET)
+# 生成 ANTLR Lexer / Parser
+$(ANTLR_GENERATED): $(G4_FILE)
+	@echo "[ANTLR] Generating parser/lexer from $(G4_FILE)..."
+	@java -jar $(ANTLR_JAR) $(G4_FILE) -o $(GENERATED_DIR) -package $(PACKAGE_NAME) -visitor -listener
 
-# You can have more executables
-# TARGET2 = someotherpack.OtherMain
+# 编译所有 Java 文件到 build 目录（保持包结构）
+# 依赖所有源文件（含生成的）以及 build 目录的存在
+$(BUILD_DIR)/.compiled: $(JAVA_FILES) | $(BUILD_DIR)
+	@echo "[JAVAC] Compiling $(words $(JAVA_FILES)) files..."
+	@$(JC) -cp $(ANTLR_JAR) -d $(BUILD_DIR) $(JAVA_FILES)
+	@touch $(BUILD_DIR)/.compiled
 
-# Rule to build .class files
-$(BUILD_DIR)/%.class: $(SRC_DIR)/%.java | $(BUILD_DIR)
-	@echo "[$JC]: $@  << $<"
-	@$(JC) -cp $(BUILD_DIR) -d $(BUILD_DIR) $<
-
-# Rule to build main executable
-$(TARGET): $(BUILD_DIR)
-	@echo "[JV]: " $@
-	$(JV) -cp build $(TARGET)
-
-# Make the build directory
+# 创建 build 目录
 $(BUILD_DIR):
-	@echo $(JAVA_FILES)
-	@ if ! [ -e $(BUILD_DIR) ]; then mkdir $(BUILD_DIR); fi
-	@echo "[JC]: " $@
-	@$(JC) $(JAVA_FILES) -d $(BUILD_DIR)
+	@mkdir -p $(BUILD_DIR)
 
-# Remove files
+# 运行主类
+run: $(BUILD_DIR)/.compiled
+	$(JV) -cp $(BUILD_DIR):$(ANTLR_JAR) $(MAIN_CLASS)
+
+# 清理
 clean:
-	@$(foreach file, $(CLEAN), if [ -e "$(file)" ]; then echo "[RM] $(file)"; rm -r "$(file)";fi;)
+	@echo "[CLEAN] Removing build directory and generated files..."
+	@rm -rf $(BUILD_DIR)
+	@rm -f $(GENERATED_DIR)/MandrillLexer.java \
+	       $(GENERATED_DIR)/MandrillParser.java \
+	       $(GENERATED_DIR)/MandrillBaseListener.java \
+	       $(GENERATED_DIR)/MandrillListener.java \
+	       $(GENERATED_DIR)/MandrillBaseVisitor.java \
+	       $(GENERATED_DIR)/MandrillVisitor.java \
+	       $(GENERATED_DIR)/Mandrill*.tokens \
+	       $(GENERATED_DIR)/Mandrill*.interp
+	@rm -rf $(GENERATED_DIR)

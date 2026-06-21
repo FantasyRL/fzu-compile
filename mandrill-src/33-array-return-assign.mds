@@ -1,0 +1,7 @@
+func[] make() {
+    s[] = "Hello World";
+    return s;
+}
+
+b[] = make();
+write = b;

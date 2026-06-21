@@ -1,0 +1,4 @@
+a[] = "Hello World";
+b[] = a;
+a[0] = 'X';
+write = b;

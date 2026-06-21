@@ -1,0 +1,15 @@
+a[] = "Hello World";
+b[] = "";
+i = 0;
+j = 0;
+while (a[i] != 0) {
+    if (a[i] == ' ') {
+        i = i + 1;
+        continue;
+    }
+    b[j] = a[i];
+    i = i + 1;
+    j = j + 1;
+}
+b[j] = 0;
+write = b;

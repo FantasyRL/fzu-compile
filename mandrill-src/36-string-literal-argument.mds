@@ -1,0 +1,6 @@
+func[] strcpy(src[]) {
+    dst[] = src;
+    return dst;
+}
+
+write = strcpy("Hello World");
